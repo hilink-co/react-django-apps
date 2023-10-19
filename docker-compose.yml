@@ -1,0 +1,53 @@
+version: "3.7"
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend:/app/backend
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    depends_on:
+      - db
+    networks:
+      - application-network-local
+    tty: true
+    command: tail -f /dev/null
+  db:
+    image: mysql:8.0
+    volumes:
+      - application-db:/var/lib/mysql/
+    restart: always
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    networks:
+      - application-network-local
+    environment:
+      MYSQL_DATABASE: 'backend'
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app/frontend
+        # One-way volume to use node_modules from inside image
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    networks:
+      - application-network-local
+    command: tail -f /dev/null
+    # this is needed for having react server available
+    stdin_open: true
+volumes:
+  application-db:
+networks:
+  application-network-local:
+    name: application_network_local

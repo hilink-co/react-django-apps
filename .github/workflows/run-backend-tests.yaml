@@ -1,0 +1,44 @@
+name: Run backend tests
+
+on:
+  pull_request:
+    paths:
+    - 'backend/**'
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: test_backend
+          MYSQL_ROOT_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Ubuntu dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install libcurl4-openssl-dev libmysqlclient-dev libgirepository1.0-dev
+    - name: Setup Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.12
+    - name: install dependencies
+      working-directory: backend
+      run: |
+        pip install -r requirements.txt
+    - name: run test 
+      env:
+        MYSQL_DATABSE: test_backend
+        MYSQL_PASSWORD: password
+        MYSQL_DATABASE: test_db
+        MYSQL_HOST: 127.0.0.1 # Will not work with 'localhost', since that will try a Unix socket connection (!)
+      working-directory: backend
+      run: |
+        set -x
+        pytest
+        
