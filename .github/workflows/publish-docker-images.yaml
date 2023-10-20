@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  DJANGO_APP_DOCKER_REPOSITORY: react-django-infra
+  DJANGO_APP_DOCKER_REPOSITORY: web-apps-infra
 
 jobs:
   publish-django-image:

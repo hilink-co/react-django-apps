@@ -11,4 +11,5 @@ COPY . /app/backend
 EXPOSE 8000
 
 # default port 8000
-CMD python manage.py runserver
+# CMD python manage.py runserver
+CMD tail -f /dev/null
