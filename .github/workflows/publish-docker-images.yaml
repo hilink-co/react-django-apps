@@ -1,13 +1,12 @@
 name: Publish Docker Images
 
 on:
-  pull_request:
-    types: [closed]
-    branches: [main]
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 env:
-  DJANGO_APP_DOCKER_REPOSITORY: react-django-infra
+  DJANGO_APP_DOCKER_REPOSITORY: web-apps-infra
 
 jobs:
   publish-django-image:
@@ -33,7 +32,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ env.DJANGO_APP_DOCKER_REPOSITORY }}
-          IMAGE_TAG: "v0.0.1_test"
+          IMAGE_TAG: "v0.0.1_2"
           # IMAGE_TAG: ${{ github.sha }} # TODO: use semver tags
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f dockerfiles/backend.Dockerfile .
