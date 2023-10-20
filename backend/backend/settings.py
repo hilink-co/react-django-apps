@@ -98,15 +98,7 @@ DATABASES = {
         "PASSWORD": os.environ.get("MYSQL_PASSWORD", "password"),
         "HOST": os.environ.get("MYSQL_HOST", "db"),
         "PORT": os.environ.get("MYSQL_PORT", "3306"),
-    },
-    "test": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ.get("MYSQL_DATABASE", "test_db"),
-        "USER": os.environ.get("MYSQL_USER", "root"),
-        "PASSWORD": os.environ.get("MYSQL_PASSWORD", "password"),
-        "HOST": os.environ.get("MYSQL_HOST", "db"),
-        "PORT": os.environ.get("MYSQL_PORT", "3306"),
-    },
+    }
 }
 
 
