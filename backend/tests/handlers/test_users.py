@@ -1,9 +1,10 @@
 import pytest
+from django.http import JsonResponse
 from backend.models import User
 
 
 @pytest.mark.django_db
-def test_user(*_):
+def test_get_user(client):
     user = User.objects.create(
         first_name="Barack",
         last_name="Obama",
@@ -11,4 +12,7 @@ def test_user(*_):
         status=1,
     )
 
-    assert user.first_name == "Barack"
+    response: JsonResponse = client.get("/users/{}".format(user.id))
+    json: dict = response.json()
+
+    assert json.get("first_name") == "Barack"
