@@ -43,7 +43,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          # provisioned by react-django-infra
+          # provisioned by web-apps-infra
           # module.github-oidc.oidc_role
           role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }} 
           aws-region: us-east-1
