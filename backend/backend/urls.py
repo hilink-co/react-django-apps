@@ -16,5 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from backend.handlers.health_check import health_check
+from backend.handlers.users import get_user
 
-urlpatterns = [path("admin/", admin.site.urls), path("healthcheck", health_check)]
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("healthcheck", health_check),
+    path("users/<int:user_id>", get_user),
+]

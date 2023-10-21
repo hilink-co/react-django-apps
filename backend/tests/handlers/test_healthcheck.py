@@ -1,4 +1,3 @@
-import pytest
 from django.http import JsonResponse
 
 
