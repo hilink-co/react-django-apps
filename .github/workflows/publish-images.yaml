@@ -1,4 +1,4 @@
-name: Publish Docker Images
+name: Publish Images
 
 on:
   push:
@@ -60,3 +60,21 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f dockerfiles/backend.Dockerfile .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+  publish-github-tag:
+    permissions: write-all
+    needs: 
+      - get-new-release-tag
+      - publish-django-image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions-ecosystem/action-get-latest-tag@v1
+        with:
+          semver_only: true
+
+      - uses: actions-ecosystem/action-push-tag@v1
+        with:
+          tag: ${{needs.get-new-release-tag.outputs.release_version}}
+          message: '${{needs.get-new-release-tag.outputs.release_version}}: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}'
