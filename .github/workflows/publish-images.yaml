@@ -1,9 +1,9 @@
 name: Publish Images
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [closed]
+    branches: [main]
 
 env:
   DJANGO_APP_DOCKER_REPOSITORY: web-apps-infra
