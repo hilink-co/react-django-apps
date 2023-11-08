@@ -7,6 +7,7 @@ on:
 
 env:
   DJANGO_APP_DOCKER_REPOSITORY: web-apps-infra
+  REACT_APP_VERSION_BUCKET: uat.hilinkdev.com
 
 jobs:
   get-new-release-tag:
@@ -61,6 +62,42 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f dockerfiles/backend.Dockerfile .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
+  publish-react-build:
+    needs: get-new-release-tag
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # provisioned by web-apps-infra
+          # module.github-oidc.oidc_role
+          role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }} 
+          aws-region: us-east-1
+
+      - name: Set up NodeJS environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name : Install packages
+        working-directory: frontend
+        run: yarn install
+
+      - name: Build Frontend
+        working-directory: frontend
+        run: yarn build
+
+      - name: 'Upload React Build'
+        working-directory: frontend
+        env:
+          DESITNATION: "${{ env.REACT_APP_VERSION_BUCKET }}/${{needs.get-new-release-tag.outputs.release_version}}"
+        run: |
+          aws s3 sync web/build/ s3://${DESITNATION}
+  
   publish-github-tag:
     permissions: write-all
     needs: 
