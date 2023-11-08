@@ -96,7 +96,7 @@ jobs:
         env:
           DESITNATION: "${{ env.REACT_APP_VERSION_BUCKET }}/${{needs.get-new-release-tag.outputs.release_version}}"
         run: |
-          aws s3 sync web/build/ s3://${DESITNATION}
+          aws s3 sync build/ s3://${DESITNATION}
   
   publish-github-tag:
     permissions: write-all
