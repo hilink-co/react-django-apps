@@ -7,7 +7,7 @@ on:
 
 env:
   DJANGO_APP_DOCKER_REPOSITORY: web-apps-infra
-  REACT_APP_VERSION_BUCKET: uat.hilinkdev.com
+  REACT_APP_VERSION_BUCKET: web-apps-infra-web-versioning
 
 jobs:
   get-new-release-tag:
