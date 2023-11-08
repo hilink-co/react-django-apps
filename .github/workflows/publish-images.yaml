@@ -103,6 +103,7 @@ jobs:
     needs: 
       - get-new-release-tag
       - publish-django-image
+      - publish-react-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
